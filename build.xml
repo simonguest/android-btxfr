@@ -1,92 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="BTPhotoTransfer" default="help">
-
-    <!-- The local.properties file is created and updated by the 'android' tool.
-         It contains the path to the SDK. It should *NOT* be checked into
-         Version Control Systems. -->
-    <property file="local.properties"/>
-
-    <!-- The ant.properties file can be created by you. It is only edited by the
-         'android' tool to add properties to it.
-         This is the place to change some Ant specific build properties.
-         Here are some properties you may want to change/update:
-
-         source.dir
-             The name of the source directory. Default is 'src'.
-         out.dir
-             The name of the output directory. Default is 'bin'.
-
-         For other overridable properties, look at the beginning of the rules
-         files in the SDK, at tools/ant/build.xml
-
-         Properties related to the SDK location or the project target should
-         be updated using the 'android' tool with the 'update' action.
-
-         This file is an integral part of the build system for your
-         application and should be checked into Version Control Systems.
-
-         -->
-    <property file="ant.properties"/>
-
-    <!-- if sdk.dir was not set from one of the property file, then
-         get it from the ANDROID_HOME env var.
-         This must be done before we load project.properties since
-         the proguard config can use sdk.dir -->
-    <property environment="env"/>
-    <condition property="sdk.dir" value="${env.ANDROID_HOME}">
-        <isset property="env.ANDROID_HOME"/>
-    </condition>
-
-    <!-- The project.properties file is created and updated by the 'android'
-         tool, as well as ADT.
-
-         This contains project specific properties such as project target, and library
-         dependencies. Lower level build properties are stored in ant.properties
-         (or in .classpath for Eclipse projects).
-
-         This file is an integral part of the build system for your
-         application and should be checked into Version Control Systems. -->
-    <loadproperties srcFile="project.properties"/>
-
-    <!-- quick check on sdk.dir -->
-    <fail
-            message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
-            unless="sdk.dir"
-            />
-
-    <!--
-        Import per project custom build rules if present at the root of the project.
-        This is the place to put custom intermediary targets such as:
-            -pre-build
-            -pre-compile
-            -post-compile (This is typically used for code obfuscation.
-                           Compiled code location: ${out.classes.absolute.dir}
-                           If this is not done in place, override ${out.dex.input.absolute.dir})
-            -post-package
-            -post-build
-            -pre-clean
-    -->
-    <import file="custom_rules.xml" optional="true"/>
-
-    <!-- Import the actual build file.
-
-         To customize existing targets, there are two options:
-         - Customize only one target:
-             - copy/paste the target into this file, *before* the
-               <import> task.
-             - customize it to your needs.
-         - Customize the whole content of build.xml
-             - copy/paste the content of the rules files (minus the top node)
-               into this file, replacing the <import> task.
-             - customize to your needs.
-
-         ***********************
-         ****** IMPORTANT ******
-         ***********************
-         In all cases you must update the value of version-tag below to read 'custom' instead of an integer,
-         in order to avoid having your file be overridden by tools such as "android update project"
-    -->
-    <!-- version-tag: 1 -->
-    <import file="${sdk.dir}/tools/ant/build.xml"/>
-
+<project name="android-btxfer" default="all">
+  
+  
+  <property file="android-btxfer.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/*.lib/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/*.rbc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.zip"/>
+    <include name="*.apk"/>
+    <include name="*.war"/>
+    <include name="*.egg"/>
+    <include name="*.ear"/>
+    <include name="*.ane"/>
+    <include name="*.swc"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.android_4.2_platform" value="${jdk.home.android_4.2_platform}/../../System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/bin"/>
+  <path id="jdk.classpath.android_4.2_platform">
+    <fileset dir="${jdk.home.android_4.2_platform}">
+      <include name="platforms/android-17/android.jar"/>
+      <include name="platforms/android-17/data/res"/>
+      <include name="tools/support/annotations.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.android_4.2_platform}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.android_4.2_platform}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.android_4.2_platform"/>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module android-btxfer -->
+  
+  <dirname property="module.android-btxfer.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.android-btxfer" value="${jdk.home.android_4.2_platform}"/>
+  <property name="module.jdk.bin.android-btxfer" value="${jdk.bin.android_4.2_platform}"/>
+  <property name="module.jdk.classpath.android-btxfer" value="jdk.classpath.android_4.2_platform"/>
+  
+  <property name="compiler.args.android-btxfer" value="${compiler.args}"/>
+  
+  <property name="android-btxfer.output.dir" value="${module.android-btxfer.basedir}/out/production/android-btxfer"/>
+  <property name="android-btxfer.testoutput.dir" value="${module.android-btxfer.basedir}/out/test/android-btxfer"/>
+  
+  <path id="android-btxfer.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="android-btxfer.module.production.classpath">
+    <path refid="${module.jdk.classpath.android-btxfer}"/>
+  </path>
+  
+  <path id="android-btxfer.runtime.production.module.classpath">
+    <pathelement location="${android-btxfer.output.dir}"/>
+  </path>
+  
+  <path id="android-btxfer.module.classpath">
+    <path refid="${module.jdk.classpath.android-btxfer}"/>
+    <pathelement location="${android-btxfer.output.dir}"/>
+  </path>
+  
+  <path id="android-btxfer.runtime.module.classpath">
+    <pathelement location="${android-btxfer.testoutput.dir}"/>
+    <pathelement location="${android-btxfer.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.android-btxfer">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.android-btxfer">
+    <patternset refid="excluded.from.module.android-btxfer"/>
+  </patternset>
+  
+  <path id="android-btxfer.module.sourcepath">
+    <dirset dir="${module.android-btxfer.basedir}">
+      <include name="gen"/>
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.android-btxfer" depends="compile.module.android-btxfer.production,compile.module.android-btxfer.tests" description="Compile module android-btxfer"/>
+  
+  <target name="compile.module.android-btxfer.production" description="Compile module android-btxfer; production classes">
+    <mkdir dir="${android-btxfer.output.dir}"/>
+    <javac destdir="${android-btxfer.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.android-btxfer}/javac">
+      <compilerarg line="${compiler.args.android-btxfer}"/>
+      <bootclasspath refid="android-btxfer.module.bootclasspath"/>
+      <classpath refid="android-btxfer.module.production.classpath"/>
+      <src refid="android-btxfer.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.android-btxfer"/>
+    </javac>
+    
+    <copy todir="${android-btxfer.output.dir}">
+      <fileset dir="${module.android-btxfer.basedir}/gen">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.android-btxfer.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.android-btxfer.tests" depends="compile.module.android-btxfer.production" description="compile module android-btxfer; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.android-btxfer" description="cleanup module">
+    <delete dir="${android-btxfer.output.dir}"/>
+    <delete dir="${android-btxfer.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.android-btxfer" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.android-btxfer" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.android-btxfr" value="${basedir}/out/artifacts/android_btxfr"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.android-btxfr.jar" value="${artifacts.temp.dir}/android-btxfr.jar"/>
+  </target>
+  
+  <target name="artifact.android-btxfr" depends="init.artifacts" description="Build &#39;android-btxfr&#39; artifact">
+    <property name="artifact.temp.output.android-btxfr" value="${artifacts.temp.dir}/android_btxfr"/>
+    <mkdir dir="${artifact.temp.output.android-btxfr}"/>
+    <jar destfile="${temp.jar.path.android-btxfr.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset file="${basedir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
+    </jar>
+    <copy file="${temp.jar.path.android-btxfr.jar}" tofile="${artifact.temp.output.android-btxfr}/android-btxfr.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.android-btxfr" description="Build all artifacts">
+    <mkdir dir="${artifact.output.android-btxfr}"/>
+    <copy todir="${artifact.output.android-btxfr}">
+      <fileset dir="${artifact.temp.output.android-btxfr}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
 </project>
