@@ -2,7 +2,7 @@
 <project name="android-btxfer" default="all">
   
   
-  <property file="android-btxfer.properties"/>
+  <property file="build.properties"/>
   <!-- Uncomment the following property if no tests compilation is needed -->
   <!-- 
   <property name="skip.tests" value="true"/>
@@ -173,11 +173,12 @@
     <property name="temp.jar.path.android-btxfr.jar" value="${artifacts.temp.dir}/android-btxfr.jar"/>
   </target>
   
-  <target name="artifact.android-btxfr" depends="init.artifacts" description="Build &#39;android-btxfr&#39; artifact">
+  <target name="artifact.android-btxfr" depends="init.artifacts, compile.module.android-btxfer" description="Build &#39;android-btxfr&#39; artifact">
     <property name="artifact.temp.output.android-btxfr" value="${artifacts.temp.dir}/android_btxfr"/>
     <mkdir dir="${artifact.temp.output.android-btxfr}"/>
     <jar destfile="${temp.jar.path.android-btxfr.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
       <zipfileset file="${basedir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
+      <zipfileset dir="${android-btxfer.output.dir}"/>
     </jar>
     <copy file="${temp.jar.path.android-btxfr.jar}" tofile="${artifact.temp.output.android-btxfr}/android-btxfr.jar"/>
   </target>
