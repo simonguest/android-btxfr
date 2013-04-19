@@ -1,0 +1,13 @@
+/**/local.properties
+**/*.class
+**/bin/*
+**/gen/*
+**/.DS_Store
+bin/
+gen/
+.idea/*
+.DS_Store
+classes.dex
+.idea/workspace.xml
+out/
+.idea/dictionaries/
