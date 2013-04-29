@@ -4,7 +4,7 @@ A lightweight library for transferring data between Android devices using Blueto
 
 Introduction
 ------------
-android-btxfr is a lightweight library designed to send and receive any type of data between Android (API 15 and higher).  It can be used to exchange text, files, photos, videos, sounds, and literally any other type of binary data.  The library supports anything that can be put into a byte stream and includes digest checking to ensure data integrity.
+android-btxfr is a lightweight library designed to send and receive any type of data between Android (API 15 and higher).  It can be used to exchange text, files, photos, videos, sounds, and literally any other type of binary data.  The library supports anything that can be put into a byte stream and includes digest checking to ensure data integrity.  You can read more about the library in [this blog post.](http://simonguest.com/2013/04/19/transferring-data-via-bluetooth-on-android-android-btxfr/)
 
 Building The Library
 --------------------
@@ -24,7 +24,7 @@ Receiving data is easy.  Simply run the server thread, passing the paired blueto
 * *DATA_PROGRESS_UPDATE* - Data is being received by the other device.  The message contains the progress of the data.
 * *DATA_RECEIVED* - Data has been fully received by the other device.  The message will contain the actual payload (a byte stream of the image, video, etc.)
 
-There are other message types to handle failure condition.
+There are other message types to handle failure conditions.
 
 The client thread works in a similar fashion.  Invoke the client thread, passing the paired bluetooth device and handler.  The handler will be called with the following messages:
 
