@@ -28,7 +28,7 @@ class Utils {
     public static byte[] getDigest(byte[] imageData) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            return messageDigest.digest();
+            return messageDigest.digest(imageData);
         } catch (Exception ex) {
             Log.e(TAG, ex.toString());
             throw new UnsupportedOperationException("MD5 algorithm not available on this device.");
