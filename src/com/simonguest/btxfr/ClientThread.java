@@ -35,7 +35,6 @@ public class ClientThread extends Thread {
             Log.v(TAG, "Opening client socket");
             socket.connect();
             Log.v(TAG, "Connection established");
-            handler.sendEmptyMessage(MessageType.READY_FOR_DATA);
 
         } catch (IOException ioe) {
             handler.sendEmptyMessage(MessageType.COULD_NOT_CONNECT);
@@ -114,6 +113,7 @@ public class ClientThread extends Thread {
             }
         };
 
+        handler.sendEmptyMessage(MessageType.READY_FOR_DATA);
         Looper.loop();
     }
 
